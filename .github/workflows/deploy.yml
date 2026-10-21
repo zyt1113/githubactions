@@ -1,0 +1,39 @@
+# 实验03 实践项目2 步骤4：自动部署静态文档到 GitHub Pages
+# 位置：.github/workflows/deploy.yml
+# 作用：main 分支上 docs/ 或 mkdocs.yml 变化时，用 MkDocs 构建静态站点并推送到 gh-pages 分支
+name: Deploy MkDocs to GitHub Pages   # 工作流名称（自定义）
+
+on:                       # 触发条件
+  push:
+    branches:
+      - main              # 仅在 main 分支推送代码时触发
+    paths:
+      - 'docs/**'         # 仅当 docs 目录下文件变化时触发
+      - 'mkdocs.yml'      # 仅当 MkDocs 配置文件变化时触发
+
+jobs:                     # 工作流任务
+  deploy:
+    runs-on: ubuntu-latest            # 运行环境：Ubuntu 最新版
+
+    steps:                            # 任务执行步骤
+      - name: 检出代码                 # 步骤1：拉取 GitHub 仓库代码
+        uses: actions/checkout@v4
+
+      - name: 设置Python环境           # 步骤2：配置 Python（MkDocs 依赖 Python）
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'        # 指定 Python 版本
+
+      - name: 安装MkDocs及主题         # 步骤3：安装依赖工具
+        run: |
+          pip install mkdocs-material  # 安装 MkDocs 和 Material 主题
+
+      - name: 构建静态文档             # 步骤4：生成静态网站文件
+        run: |
+          mkdocs build                 # 生成的文件存放在项目根目录的 site/ 文件夹
+
+      - name: 部署到GitHub Pages       # 步骤5：将静态文件部署到 gh-pages 分支
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages             # 部署目标分支（GitHub Pages 默认读取该分支）
+          folder: site                 # 待部署的文件目录（即步骤4生成的 site 目录）

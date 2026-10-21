@@ -1,0 +1,12 @@
+# 实验03 实践项目2 步骤3：MkDocs 配置文件
+# 说明：MkDocs 通过该文件识别文档结构和网站样式，material 主题需后续安装，无需手动下载
+site_name: 我的技术文档   # 网站名称（将显示在页面标题和导航栏）
+
+theme:
+  name: material          # 使用 Material 主题（美观且支持响应式）
+
+nav:                      # 网站导航结构（对应 docs 目录下的文件）
+  - 首页: index.md
+  - 关于: about.md
+  - 指南: guide.md
+  - API: api.md
